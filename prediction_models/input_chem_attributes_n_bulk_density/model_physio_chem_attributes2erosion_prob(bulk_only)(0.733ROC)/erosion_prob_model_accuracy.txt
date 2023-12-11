@@ -1,0 +1,1 @@
+ROC-AUC for Probability of Erosion: 0.7337331036310628

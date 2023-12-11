@@ -1,0 +1,10 @@
+Accuracy for managed land detection: 0.8756613756613757
+Classification Report for Task 1:
+              precision    recall  f1-score   support
+
+           0       0.90      0.72      0.80       386
+           1       0.87      0.96      0.91       748
+
+    accuracy                           0.88      1134
+   macro avg       0.88      0.84      0.85      1134
+weighted avg       0.88      0.88      0.87      1134
