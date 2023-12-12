@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pandas as pd
 import os
 import joblib
@@ -6,6 +7,8 @@ import json
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 app = Flask(__name__)
+CORS(app, origins="*")
+
 
 def load_model(model_path):
     try:
