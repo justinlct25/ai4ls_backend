@@ -7,15 +7,11 @@ from sklearn.svm import SVR
 from sklearn.metrics import mean_absolute_error
 import joblib  
 
+
 # Load your dataset from the CSV file
 df = pd.read_csv("../../csv_processing/LUCAS-SOIL-2018(managed-l)(bulk-density)(erosion)(out-standard)(textural-info).csv")
 
-# Replace NaN values with 0 in all columns
-# df.fillna(0, inplace=True)
-
-# Replace values below LOD in specified columns
-# attribute_columns = ['Coarse', 'Clay', 'Sand', 'Silt', 'BD 0-20']
-attribute_columns = ['Coarse', 'Clay', 'Sand', 'Silt']
+attribute_columns = ['BD 0-10', 'BD 10-20', 'BD 0-20']
 
 df.dropna(subset=attribute_columns, inplace=True)
 print(f"Number of rows in the original dataframe: {df.shape[0]}")
@@ -58,7 +54,7 @@ with open(accuracy_file, "w") as file:
         file.write(accuracy_info + "\n")
 
 # Save the fitted scaler
-scaler_filename = "standard_scaler_lu_lc2texture.pkl"
+scaler_filename = "standard_scaler_lu_lc2bulk.pkl"
 joblib.dump(scaler, scaler_filename)
 
 # Save each model to a .pkl file
@@ -66,3 +62,4 @@ for attribute, model in svr_models.items():
     filename = f"svr_model_lu&c_{attribute}.pkl"
     if filename:
         joblib.dump(model, filename)
+

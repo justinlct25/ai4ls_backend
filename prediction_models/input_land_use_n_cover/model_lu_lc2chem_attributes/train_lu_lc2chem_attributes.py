@@ -8,7 +8,7 @@ import joblib
 
 
 # Load your dataset from the CSV file
-df = pd.read_csv("./LUCAS-SOIL-2018.csv")
+df = pd.read_csv("../../csv_processing/LUCAS-SOIL-2018.csv")
 
 # Replace NaN values with 0 in all columns
 df.fillna(0, inplace=True)
@@ -55,20 +55,12 @@ with open(accuracy_file, "w") as file:
         print(accuracy_info)
         file.write(accuracy_info + "\n")
 
+# Save the fitted scaler
+scaler_filename = "standard_scaler_lu_lc2chem_attributes.pkl"
+joblib.dump(scaler, scaler_filename)
+
 # Save each model to a .pkl file
 for attribute, model in svr_models.items():
     filename = f"svr_model_lu&c_{attribute}.pkl"
     if filename:
         joblib.dump(model, filename)
-
-# # Now, you can use the trained models for making predictions on new data.
-# # For example, to predict the chemical attributes for a new sample:
-# new_sample = pd.DataFrame({
-#     "LU1_Desc_encoded": [label_encoder_lu1.transform(["Forestry"])[0]],
-#     # "LC0_Desc_encoded": [label_encoder_lc0.transform(["Woodland"])[0]],
-#     "LC0_Desc_encoded": [label_encoder_lc0.transform(["Water"])[0]],
-# })
-
-# new_sample_scaled = scaler.transform(new_sample)
-# predictions = {target: model.predict(new_sample_scaled.reshape(1, -1))[0] for target, model in svr_models.items()}
-# print("Predictions for new sample:", predictions)

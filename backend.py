@@ -17,6 +17,17 @@ def load_model(model_path):
     except Exception as e:
         print(f"Error loading the model from {model_path}: {e}")
         return None
+    
+def load_scaler(scaler_path):
+    try:
+        if not os.path.exists(scaler_path):
+            raise FileNotFoundError(f"Model file not found at: {scaler_path}")
+        model = joblib.load(scaler_path)
+        print(f"Scaler loaded from {scaler_path}.")
+        return model
+    except Exception as e:
+        print(f"Error loading the scaler from {scaler_path}: {e}")
+        return None
 
 loaded_models = {}
 with open('./models_config.json', 'r') as json_file:
@@ -27,6 +38,10 @@ with open('./models_config.json', 'r') as json_file:
             for model, model_info in output_info["models"].items():
                 model_file_path = os.path.join(model_folder_path, model_info["model_file"])
                 model_info["model"] = load_model(model_file_path)
+                if "scaler_file" in model_info:
+                    scaler_file_path = os.path.join(model_folder_path, model_info["scaler_file"])
+                    model_info["scaler"] = load_scaler(scaler_file_path)
+
 
 @app.route('/predict_land_management', methods=['POST'])
 def predict_land_management():
@@ -40,7 +55,8 @@ def predict_land_management():
         return jsonify({"prediction": is_managed, "probability": probability})
     except Exception as e:
         return jsonify({'error': str(e)})
-    
+
+
 @app.route('/chem_attributes_for_predictions', methods=['POST'])
 def chem_attributes_for_predictions():
     try:
@@ -85,9 +101,7 @@ def chem_attributes_for_predictions():
         return jsonify(prediction_results)
     except Exception as e:
         return jsonify({'error': str(e)})
-    
-label_encoder_lu1 = LabelEncoder()
-label_encoder_lc0 = LabelEncoder()
+
 
 @app.route('/land_use_and_cover_for_predictions', methods=['POST'])
 def land_use_and_cover_for_predictions():
@@ -95,6 +109,8 @@ def land_use_and_cover_for_predictions():
         classes_info = loaded_models["inputs"]["land_use_n_land_cover"]["classes"]
         land_use_classes_file = os.path.join(classes_info["folder"], classes_info["land_use"])
         land_cover_classes_file = os.path.join(classes_info["folder"], classes_info["land_cover"])
+        label_encoder_lu1 = LabelEncoder()
+        label_encoder_lc0 = LabelEncoder()
         label_encoder_lu1.classes_ = joblib.load(land_use_classes_file)
         label_encoder_lc0.classes_ = joblib.load(land_cover_classes_file)
         data = request.get_json()
@@ -102,19 +118,30 @@ def land_use_and_cover_for_predictions():
         input_classes["LU1_Desc_encoded"] = label_encoder_lu1.transform(input_classes["LU1_Desc"])
         input_classes["LC0_Desc_encoded"] = label_encoder_lc0.transform(input_classes["LC0_Desc"])
         input_classes_numeric = input_classes.drop(["LU1_Desc", "LC0_Desc"], axis=1)
-        scaler = StandardScaler()
-        input_classes_scaled = scaler.fit_transform(input_classes_numeric)
         prediction_models = loaded_models["inputs"]["land_use_n_land_cover"]["outputs"]["all_attributes"]["models"]
         prediction_results = {}
         for attribute, model_info in prediction_models.items():
+            input_classes_scaled = model_info["scaler"].transform(input_classes_numeric)
             prediction_results[attribute] = model_info["model"].predict(input_classes_scaled)[0]
         return jsonify(prediction_results)
     except Exception as e:
         return jsonify({'error': str[e]})
 
+@app.route('/land_use_and_cover_classes')
+def land_use_and_cover_classes():
+    try:
+        classes_info = loaded_models["inputs"]["land_use_n_land_cover"]["classes"]
+        land_use_classes_file = os.path.join(classes_info["folder"], classes_info["land_use"])
+        land_cover_classes_file = os.path.join(classes_info["folder"], classes_info["land_cover"])
+        classes = {
+            "land_use_classes": joblib.load(land_use_classes_file).tolist(),
+            "land_cover_classes": joblib.load(land_cover_classes_file).tolist()
+        }
+        return jsonify(classes)
+    except Exception as e:
+        return jsonify({'error': str[e]})
+    
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
 
-@app.route('/lucas_sample_points')
-def get_lucas_sample_points():
-    return "Hello"

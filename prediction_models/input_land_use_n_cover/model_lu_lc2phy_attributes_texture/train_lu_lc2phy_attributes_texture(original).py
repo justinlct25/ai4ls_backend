@@ -11,7 +11,12 @@ import joblib
 # Load your dataset from the CSV file
 df = pd.read_csv("../../csv_processing/LUCAS-SOIL-2018(managed-l)(bulk-density)(erosion)(out-standard)(textural-info).csv")
 
-attribute_columns = ['BD 0-10', 'BD 10-20', 'BD 0-20']
+# Replace NaN values with 0 in all columns
+# df.fillna(0, inplace=True)
+
+# Replace values below LOD in specified columns
+# attribute_columns = ['Coarse', 'Clay', 'Sand', 'Silt', 'BD 0-20']
+attribute_columns = ['Coarse', 'Clay', 'Sand', 'Silt']
 
 df.dropna(subset=attribute_columns, inplace=True)
 print(f"Number of rows in the original dataframe: {df.shape[0]}")

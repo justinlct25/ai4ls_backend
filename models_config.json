@@ -117,84 +117,98 @@
                     "folder": "./prediction_models/input_land_use_n_cover/run_lu_lc2all_attributes",
                     "models": {
                         "BD 0-10": {
+                            "scaler_file": "standard_scaler_lu_lc2bulk.pkl",
                             "model_file": "svr_model_lu&c_BD 0-10.pkl",
                             "accuracy": {
                                 "MAE": 0.23458101712492468
                             }
                         },
                         "BD 10-20": {
+                            "scaler_file": "standard_scaler_lu_lc2bulk.pkl",
                             "model_file": "svr_model_lu&c_BD 10-20.pkl",
                             "accuracy": {
                                 "MAE": 0.2393407523411137
                             }
                         },
                         "BD 0-20": {
+                            "scaler_file": "standard_scaler_lu_lc2bulk.pkl",
                             "model_file": "svr_model_lu&c_BD 0-20.pkl",
                             "accuracy": {
                                 "MAE": 0.22601517462837817
                             }
                         },
                         "Coarse": {
+                            "scaler_file": "standard_scaler_lu_lc2texture.pkl",
                             "model_file": "svr_model_lu&c_Coarse.pkl",
                             "accuracy": {
                                 "MAE": 10.563049454807516
                             }
                         },
                         "Clay": {
+                            "scaler_file": "standard_scaler_lu_lc2texture.pkl",
                             "model_file": "svr_model_lu&c_Clay.pkl",
                             "accuracy": {
                                 "MAE": 8.333875509084493
                             }
                         },
                         "Sand": {
+                            "scaler_file": "standard_scaler_lu_lc2texture.pkl",
                             "model_file": "svr_model_lu&c_Sand.pkl",
                             "accuracy": {
                                 "MAE": 15.9717201331519
                             }
                         },
                         "Silt": {
+                            "scaler_file": "standard_scaler_lu_lc2texture.pkl",
                             "model_file": "svr_model_lu&c_Silt.pkl",
                             "accuracy": {
                                 "MAE": 10.09256461275031
                             }
                         },
                         "pH_H2O": {
+                            "scaler_file": "standard_scaler_lu_lc2chem_attributes.pkl",
                             "model_file": "svr_model_lu&c_pH_H2O.pkl",
                             "accuracy": {
                                 "MAE": 0.8214400221202984
                             }
                         },
                         "EC": {
+                            "scaler_file": "standard_scaler_lu_lc2chem_attributes.pkl",
                             "model_file": "svr_model_lu&c_EC.pkl",
                             "accuracy": {
                                 "MAE": 10.027024656770392
                             }
                         },
                         "OC": {
+                            "scaler_file": "standard_scaler_lu_lc2chem_attributes.pkl",
                             "model_file": "svr_model_lu&c_OC.pkl",
                             "accuracy": {
                                 "MAE": 31.865389869932347
                             }
                         },
                         "CaCO3": {
+                            "scaler_file": "standard_scaler_lu_lc2chem_attributes.pkl",
                             "model_file": "svr_model_lu&c_CaCO3.pkl",
                             "accuracy": {
                                 "MAE": 59.10032392278259
                             }
                         },
                         "P": {
+                            "scaler_file": "standard_scaler_lu_lc2chem_attributes.pkl",
                             "model_file": "svr_model_lu&c_P.pkl",
                             "accuracy": {
                                 "MAE": 17.794391721820677
                             }
                         },
                         "N": {
+                            "scaler_file": "standard_scaler_lu_lc2chem_attributes.pkl",
                             "model_file": "svr_model_lu&c_N.pkl",
                             "accuracy": {
                                 "MAE": 1.7725339395210393
                             }
                         },
                         "K": {
+                            "scaler_file": "standard_scaler_lu_lc2chem_attributes.pkl",
                             "model_file": "svr_model_lu&c_K.pkl",
                             "accuracy": {
                                 "MAE": 114.08801513112535
