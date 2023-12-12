@@ -32,6 +32,26 @@ def load_scaler(scaler_path):
         print(f"Error loading the scaler from {scaler_path}: {e}")
         return None
 
+soil_units = {}
+with open('./soil_attributes_units.json') as json_file:
+    soil_units = json.load(json_file)
+
+soil_standards = {}
+with open('./soil_attributes_standards.json') as json_file:
+    soil_standards = json.load(json_file)
+
+def is_soil_attribute_hv_standard(attribute):
+    return True if attribute in soil_standards else False
+
+def is_soil_attribute_out_standard(attribute, value):
+    attr_range = soil_standards[attribute]
+    if "min" in attr_range and value < attr_range["min"]:
+        return False
+    elif "max" in attr_range and value > attr_range["max"]:
+        return False
+    else:
+        return True
+    
 loaded_models = {}
 with open('./models_config.json', 'r') as json_file:
     loaded_models = json.load(json_file)
@@ -79,27 +99,43 @@ def chem_attributes_for_predictions():
                 "prediction": is_managed,
                 "probability": prediction_models["is_managed"]["model"].predict_proba(soil_attributes)[0][is_managed],
             },
+            "model_info": "Support Vector Classification (SVC) model",
             "model_accuracy": prediction_models["is_managed"]["accuracy"]
         }
         prediction_results["erosion_probability"] = {
             "result": {
                 "probability": float(prediction_models["erosion_probability"]["model"].predict_proba(soil_attributes)[:, 1])
             },
+            "model_info": "Support Vector Classification (SVC) model",
             "model_accuracy": prediction_models["erosion_probability"]["accuracy"]
         }
+        # physical attribute texture model processing
         prediction_results["phy_attributes_texture"] = {
             "result": {}, 
+            "model_info": "Support Vector Regression (SVR) models",
             "model_accuracy": {}
         }
         for attribute, model_info in prediction_models["phy_attributes_texture"].items():
-            prediction_results["phy_attributes_texture"]["result"][attribute] = model_info["model"].predict(soil_attributes_scaled)[0]
+            value = model_info["model"].predict(soil_attributes_scaled)[0]
+            attribute_result = {}
+            attribute_result["value"] = value
+            if is_soil_attribute_hv_standard(attribute):
+                attribute_result["out_of_standard"] = is_soil_attribute_out_standard(attribute, value)
+            prediction_results["phy_attributes_texture"]["result"][attribute] = attribute_result
             prediction_results["phy_attributes_texture"]["model_accuracy"][attribute] = model_info["accuracy"]
+        # physical attribute bulk density model processing
         prediction_results["phy_attributes_bulk_density"] = {
             "result": {}, 
+            "model_info": "Support Vector Regression (SVR) models",
             "model_accuracy": {}
         }
         for attribute, model_info in prediction_models["phy_attributes_bulk_density"].items():
-            prediction_results["phy_attributes_bulk_density"]["result"][attribute] = model_info["model"].predict(soil_attributes_scaled)[0]
+            value = model_info["model"].predict(soil_attributes_scaled)[0]
+            attribute_result = {}
+            attribute_result["value"] = value
+            if is_soil_attribute_hv_standard(attribute):
+                attribute_result["out_of_standard"] = is_soil_attribute_out_standard(attribute, value)
+            prediction_results["phy_attributes_bulk_density"]["result"][attribute] = attribute_result
             prediction_results["phy_attributes_bulk_density"]["model_accuracy"][attribute] = model_info["accuracy"]
         return jsonify(prediction_results)
     except Exception as e:
@@ -123,13 +159,25 @@ def land_use_and_cover_for_predictions():
         input_classes_numeric = input_classes.drop(["LU1_Desc", "LC0_Desc"], axis=1)
         prediction_models = loaded_models["inputs"]["land_use_n_land_cover"]["outputs"]["all_attributes"]["models"]
         prediction_results = {}
+        prediction_results["all_attributes"] = {
+            "result": {},
+            "model_info": "Support Vector Regression (SVR) models",
+            "model_accuracy": {}
+        }
         for attribute, model_info in prediction_models.items():
             input_classes_scaled = model_info["scaler"].transform(input_classes_numeric)
-            prediction_results[attribute] = model_info["model"].predict(input_classes_scaled)[0]
+            value = model_info["model"].predict(input_classes_scaled)[0]
+            attribute_result = {}
+            attribute_result["value"] = value
+            if is_soil_attribute_hv_standard(attribute):
+                attribute_result["out_of_standard"] = is_soil_attribute_out_standard(attribute, value)
+            prediction_results["all_attributes"]["result"][attribute] = attribute_result
+            prediction_results["all_attributes"]["model_accuracy"][attribute] = model_info["accuracy"]
+        
         return jsonify(prediction_results)
     except Exception as e:
         return jsonify({'error': str[e]})
-
+    
 @app.route('/land_use_and_cover_classes')
 def land_use_and_cover_classes():
     try:
@@ -141,6 +189,20 @@ def land_use_and_cover_classes():
             "land_cover_classes": joblib.load(land_cover_classes_file).tolist()
         }
         return jsonify(classes)
+    except Exception as e:
+        return jsonify({'error': str[e]})
+    
+@app.route('/soil_attribute_units')
+def soil_attribute_units():
+    try:
+        return jsonify(soil_units)
+    except Exception as e:
+        return jsonify({'error': str[e]})
+    
+@app.route('/soil_attribute_standards')
+def soil_attribute_standards():
+    try:
+        return jsonify(soil_standards)
     except Exception as e:
         return jsonify({'error': str[e]})
     
