@@ -40,6 +40,10 @@ soil_standards = {}
 with open('./soil_attributes_standards.json') as json_file:
     soil_standards = json.load(json_file)
 
+soil_attributes_info = {}
+with open('./soil_attributes_info.json') as json_file:
+    soil_attributes_info = json.load(json_file)
+
 def is_soil_attribute_hv_standard(attribute):
     return True if attribute in soil_standards else False
 
@@ -121,6 +125,7 @@ def chem_attributes_for_predictions():
             attribute_result["value"] = value
             if is_soil_attribute_hv_standard(attribute):
                 attribute_result["out_of_standard"] = is_soil_attribute_out_standard(attribute, value)
+            attribute_result["info"] = soil_attributes_info[attribute]
             prediction_results["phy_attributes_texture"]["result"][attribute] = attribute_result
             prediction_results["phy_attributes_texture"]["model_accuracy"][attribute] = model_info["accuracy"]
         # physical attribute bulk density model processing
@@ -135,6 +140,7 @@ def chem_attributes_for_predictions():
             attribute_result["value"] = value
             if is_soil_attribute_hv_standard(attribute):
                 attribute_result["out_of_standard"] = is_soil_attribute_out_standard(attribute, value)
+            attribute_result["info"] = soil_attributes_info[attribute]
             prediction_results["phy_attributes_bulk_density"]["result"][attribute] = attribute_result
             prediction_results["phy_attributes_bulk_density"]["model_accuracy"][attribute] = model_info["accuracy"]
         return jsonify(prediction_results)
@@ -171,6 +177,7 @@ def land_use_and_cover_for_predictions():
             attribute_result["value"] = value
             if is_soil_attribute_hv_standard(attribute):
                 attribute_result["out_of_standard"] = is_soil_attribute_out_standard(attribute, value)
+            attribute_result["info"] = soil_attributes_info[attribute]
             prediction_results["all_attributes"]["result"][attribute] = attribute_result
             prediction_results["all_attributes"]["model_accuracy"][attribute] = model_info["accuracy"]
         

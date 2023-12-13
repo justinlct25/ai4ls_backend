@@ -1,0 +1,61 @@
+{
+    "pH_H2O": {
+        "category": "chemical",
+        "unit": "-"
+    },
+    "EC": {
+        "category": "chemical",
+        "unit": "mS/m"
+    },
+    "OC": {
+        "category": "chemical",
+        "unit": "g/kg"
+    },
+    "CaCO3": {
+        "category": "chemical",
+        "unit": "g/kg"
+    },
+    "P": {
+        "category": "chemical",
+        "unit": "mg/kg"
+    },
+    "N": {
+        "category": "chemical",
+        "unit": "g/kg"
+    },
+    "K": {
+        "category": "chemical",
+        "unit": "mg/kg"
+    },
+    "BD 0-10": {
+        "full": "Bulk Density(0-20)",
+        "category": "physical",
+        "unit": "g/cm^3"
+    },
+    "BD 10-20": {
+        "full": "Bulk Density(10-20)",
+        "category": "physical",
+        "unit": "g/cm^3"
+    },
+    "BD 0-20": {
+        "full": "Bulk Density(0-20)",
+        "category": "physical",
+        "unit": "g/cm^3"
+    },
+    "Coarse": {
+        "category": "physical",
+        "unit": "%"
+    },
+    "Clay": {
+        "category": "physical",
+        "unit": "%"
+    },
+    "Sand": {
+        "category": "physical",
+        "unit": "%"
+    },
+    "Silt": {
+        "category": "physical",
+        "unit": "%"
+    }
+}
