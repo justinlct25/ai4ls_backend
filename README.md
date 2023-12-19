@@ -1,13 +1,22 @@
 # This is the backend for the AI4LS Hackathon
 
-Steps to run the backend:
+## Introductions
+AI for Life Sciences(2023) is a challenge series connecting AI enthusiasts with organizations to apply AI in various life sciences domains like biology, genetics, and ecology. Participants work on real-world problems, using AI to create innovative solutions.
+
+## About this Project
+  - [Demo Website](http://13.213.141.140/) 
+  - [Frontend](https://github.com/bobotangpy/AI4SL-Frontend)
+  - [Backend](https://github.com/justinlctstudy96/ai4ls_backend/tree/main)
+  - [Data tools](https://github.com/morganluuuu/AI4LS/tree/main)
+    
+## Steps to run the backend:
 - git clone https://github.com/justinlctstudy96/ai4ls_backend.git
 - python -m venv venv
 - source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 - pip install -r requirements.txt
 - python3 backend.py
 
-APIs: 
+## APIs: 
 ### GET API 1: /soil_attribute_units
 ```
 {
