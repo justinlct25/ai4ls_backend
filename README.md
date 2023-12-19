@@ -1,3 +1,4 @@
+# This is the backend for the AI4LS Hackathon
 
 Steps to run the backend:
 - git clone https://github.com/justinlctstudy96/ai4ls_backend.git
